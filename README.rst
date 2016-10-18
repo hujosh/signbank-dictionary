@@ -32,6 +32,9 @@ Then use it in a project::
 You must define the following variables in ``settings.py``
 
 * ``ALWAYS_REQUIRE_LOGIN``
+* ``LANGUAGE_NAME``
+* ``ANON_TAG_SEARCH``
+* ``ANON_SAFE_SEARCH`` 
 
 You must also add ``dictionary`` to your ``INSTALLED_APPS`` variable.
 

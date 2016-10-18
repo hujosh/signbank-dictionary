@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.shortcuts import render
 
 def login_required_config(f):
     '''
@@ -13,4 +14,9 @@ def login_required_config(f):
         
 @login_required_config
 def search(request):
-    pass
+    if request.method == 'POST':
+        pass
+        
+    # For any other kind of request...
+    else:
+        return render(request, 'dictionary/search_result.html')    

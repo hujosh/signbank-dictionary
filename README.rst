@@ -7,6 +7,9 @@ signbank-dictionary
 
 .. image:: https://travis-ci.org/hujosh/signbank-dictionary.png?branch=master
     :target: https://travis-ci.org/hujosh/signbank-dictionary
+    
+.. image:: https://codecov.io/gh/hujosh/signbank-dictionary/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/hujosh/signbank-dictionary
 
 The dictionary component of Signbank
 

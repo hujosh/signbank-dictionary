@@ -25,6 +25,13 @@ Install signbank-dictionary::
 Then use it in a project::
 
     import dictionary
+    
+You must define the following variables in ``settings.py``
+
+* ``ALWAYS_REQUIRE_LOGIN``
+
+You must also add ``dictionary`` to your ``INSTALLED_APPS`` variable.
+
 
 Features
 --------

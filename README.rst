@@ -36,7 +36,7 @@ You must define the following variables in ``settings.py``
 * ``ANON_TAG_SEARCH``
 * ``ANON_SAFE_SEARCH`` 
 
-You must also add ``dictionary`` to your ``INSTALLED_APPS`` variable.
+You must also add ``dictionary``, and ``tagging`` to your ``INSTALLED_APPS`` variable.
 
 
 Features

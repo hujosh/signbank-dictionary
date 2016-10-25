@@ -20,3 +20,4 @@ class DictionaryURLs(TestCase):
         '''
         found = resolve('/search/')
         self.assertEqual(found.func, search)
+

@@ -1,0 +1,163 @@
+[
+ {
+        "pk": 1, 
+        "model": "dictionary.keyword", 
+        "fields": {
+            "text": "Aborigine"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "dictionary.keyword", 
+        "fields": {
+            "text": "Abraham"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "dictionary.keyword", 
+        "fields": {
+            "text": "Adam"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "dictionary.keyword", 
+        "fields": {
+            "text": "Adelaide"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "dictionary.keyword", 
+        "fields": {
+            "text": "Africa"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "dictionary.keyword", 
+        "fields": {
+            "text": "African"
+        }
+    },
+    
+    
+    {
+        "pk": 1, 
+        "model": "dictionary.translation", 
+        "fields": {
+            "index": 1, 
+            "translation": 1, 
+            "gloss": 1
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "dictionary.translation", 
+        "fields": {
+            "index": 1, 
+            "translation": 2, 
+            "gloss": 2
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "dictionary.translation", 
+        "fields": {
+            "index": 1, 
+            "translation": 3, 
+            "gloss": 3
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "dictionary.translation", 
+        "fields": {
+            "index": 1, 
+            "translation": 4, 
+            "gloss": 4
+        }
+    }, 
+    
+    {
+        "pk": 5, 
+        "model": "dictionary.translation", 
+        "fields": {
+            "index": 1, 
+            "translation": 5, 
+            "gloss": 5
+        }
+    }, 
+    
+     {
+        "pk": 6, 
+        "model": "dictionary.translation", 
+        "fields": {
+            "index": 1, 
+            "translation": 6, 
+            "gloss": 6
+        }
+    }, 
+    
+    {
+        "pk": 1, 
+        "model": "dictionary.gloss", 
+        "fields": {
+            "annotation_idgloss": "ABORIGINE1", 
+            "idgloss": "Aborigine1",
+            "sn" : 1,
+            "inWeb": true
+        }
+    }, 
+    
+     {
+        "pk": 2, 
+        "model": "dictionary.gloss", 
+        "fields": {
+            "annotation_idgloss": "ABRAHAM", 
+            "idgloss": "Abraham",
+            "sn" : 2
+        }
+    }, 
+    
+    {
+        "pk": 3, 
+        "model": "dictionary.gloss", 
+        "fields": {
+            "annotation_idgloss": "ADAM", 
+            "idgloss": "Adam",
+            "sn" : 3
+        }
+    }, 
+    
+     {
+        "pk": 4, 
+        "model": "dictionary.gloss", 
+        "fields": {
+            "annotation_idgloss": "ADELAIDE", 
+            "idgloss": "Adelaide",
+            "sn" : 4
+        }
+    }, 
+    
+     {
+        "pk": 5, 
+        "model": "dictionary.gloss", 
+        "fields": {
+            "annotation_idgloss": "AFRICA", 
+            "idgloss": "Africa",
+            "sn" : 5
+        }
+    }, 
+    
+     {
+        "pk": 6, 
+        "model": "dictionary.gloss", 
+        "fields": {
+            "annotation_idgloss": "AFRICAN", 
+            "idgloss": "African",
+            "sn" : 6
+        }
+    }        
+ ]

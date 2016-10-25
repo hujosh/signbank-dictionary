@@ -10,4 +10,7 @@ urlpatterns = [
     url(r'^$', views.search, name='index'),
     # ex: search/
     url(r'^search/$', views.search, name="search"),
+    # ex: words/jet-1
+    url(r'^words/(?P<keyword>.+)-(?P<n>\d+)/$',
+            views.word, name='word'),
 ]

@@ -1,6 +1,8 @@
 import sys
 import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 try:
     from django.conf import settings
     from django.test.utils import get_runner
@@ -23,6 +25,8 @@ try:
         ],
         SITE_ID=1,
         MIDDLEWARE_CLASSES=(),
+        
+        FIXTURE_DIRS = [os.path.join(BASE_DIR, 'tests', 'fixtures')],
         
         MIDDLEWARE = [
             'django.middleware.security.SecurityMiddleware',

@@ -117,17 +117,24 @@ class Gloss(models.Model):
         return d
 
     idgloss = models.CharField("ID Gloss", max_length=50, help_text="""
-    This is the unique identifying name of an entry of a sign form in the
+This is the unique identifying name of an entry of a sign form in the
 database. No two Sign Entry Names can be exactly the same, but a "Sign
 Entry Name" can be (and often is) the same as the Annotation Idgloss.""")    
   
      # the idgloss used in transcription, may be shared between many signs
     annotation_idgloss = models.CharField("Annotation ID Gloss", blank=True, max_length=30, help_text="""
-    This is the name of a sign used by annotators when glossing the corpus in
+This is the name of a sign used by annotators when glossing the corpus in
 an ELAN annotation file. The Annotation Idgloss may be the same for two or
 more entries (each with their own 'Sign Entry Name'). If two sign entries
 have the same 'Annotation Idgloss' that means they differ in form in only
 minor or insignificant ways that can be ignored.""") 
+
+
+    sn = models.IntegerField("Sign Number", help_text="Sign Number must be a unique integer and defines the ordering of signs in the dictionary", null=True, blank=True, unique=True)   
+            # this is a sign number - was trying
+            # to be a primary key, also defines a sequence - need to keep the sequence
+            # and allow gaps between numbers for inserting later signs
+    inWeb = models.NullBooleanField("In the Web dictionary", default=False)
 
 # register Gloss for tags
 try:

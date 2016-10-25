@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from tagging.models import Tag, TaggedItem
+from django.http import HttpResponse
 
 from dictionary.forms import UserSignSearchForm
+from dictionary.models import Gloss, Keyword
 
 
 def login_required_config(function):
@@ -55,7 +57,7 @@ def search(request):
             
     # display the keyword page if there's only one hit and it is an exact match
     if len(words) == 1 and words[0].text == term:
-        return HttpResponseRedirect('/dictionary/words/'+words[0].text+'-1.html' )
+        return redirect('/dictionary/words/'+words[0].text+'-1.html' )
         
     # There might be many hits, so let's paginate them...
     paginator = Paginator(words, 50)
@@ -84,7 +86,7 @@ def remove_crude_words(words):
     try:
         crudetag = Tag.objects.get(name='lexis:crude')
     except:
-        crudetag = None       
+        crudetag = None 
     if crudetag != None:    
         crude = TaggedItem.objects.get_by_model(Gloss, crudetag)
         # remove crude words from result 
@@ -109,4 +111,11 @@ def remove_words_not_belonging_to_category(words, category):
                 result.append(w)
     words = result
     return words
-
+    
+    
+def word(request, keyword, n):
+    '''
+    View of a single keyword that may have more than one sign.
+    '''
+    # temporary...
+    return HttpResponse("TEST")

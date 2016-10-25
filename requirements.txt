@@ -1,3 +1,4 @@
 django>=1.9.6
 
 # Additional requirements go here
+django-tagging

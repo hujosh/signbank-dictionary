@@ -15,9 +15,8 @@ def login_required_config(function):
     '''
     def wrapper(*args, **kwargs):
         if settings.ALWAYS_REQUIRE_LOGIN:
-            nonlocal function
-            function = login_required(function)
-            return function(*args, **kwargs)
+            decorated_function = login_required(function)
+            return decorated_function(*args, **kwargs)
         else:
             return function(*args, **kwargs)
     return wrapper

@@ -10,7 +10,6 @@ from dictionary.views import (search, remove_crude_words,
 from dictionary.models import Keyword
 
 
-
 def create_request(url=None, method='GET', data=None, permission=None, logged_in=True):
     '''
     This function returns one of various kinds of requests. The kind

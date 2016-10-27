@@ -57,19 +57,8 @@ def search(request):
     # display the keyword page if there's only one hit and it is an exact match
     if len(words) == 1 and words[0].text == term:
         return redirect('/dictionary/words/'+words[0].text+'-1')
-        
-    # There might be many hits, so let's paginate them...
-    paginator = Paginator(words, 50)
-    if 'page' in request.GET:    
-        page = request.GET['page']
-        try:
-            result_page = paginator.page(page)
-        except PageNotAnInteger:
-            result_page = paginator.page(1)
-        except EmptyPage:
-            result_page = paginator.page(paginator.num_pages)
-    else:
-        result_page = paginator.page(1)
+    # Display the keywords, 50 per page...
+    (result_page, paginator) = paginate(request, words, 50)
     return render(request, "dictionary/search_result.html",
                               {'query' : term,
                                'form': form,
@@ -80,6 +69,7 @@ def search(request):
                                'ANON_TAG_SEARCH': settings.ANON_TAG_SEARCH,
                                'language': settings.LANGUAGE_NAME,
                                })
+
 
 def remove_crude_words(words):
     try:
@@ -99,6 +89,7 @@ def remove_crude_words(words):
         words = result
     return words
     
+    
 def remove_words_not_belonging_to_category(words, category):
     tag = Tag.objects.get(name=category)
     result = []
@@ -110,6 +101,22 @@ def remove_words_not_belonging_to_category(words, category):
                 result.append(w)
     words = result
     return words
+    
+    
+def paginate(request, objects, npages):
+    # There might be many hits, so let's paginate them...
+    paginator = Paginator(objects, npages)
+    if 'page' in request.GET:    
+        page = request.GET['page']
+        try:
+            result_page = paginator.page(page)
+        except PageNotAnInteger:
+            result_page = paginator.page(1)
+        except EmptyPage:
+            result_page = paginator.page(paginator.num_pages)
+    else:
+        result_page = paginator.page(1)
+    return (result_page, paginator)
     
     
 def word(request, keyword, n):

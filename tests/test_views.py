@@ -6,7 +6,7 @@ from django.contrib.auth.models import AnonymousUser, User, Permission
 from tagging.models import Tag
 
 from dictionary.views import (search, remove_crude_words, 
-    remove_words_not_belonging_to_category)
+    remove_words_not_belonging_to_category, paginate)
 from dictionary.models import Keyword
 
 
@@ -168,6 +168,72 @@ class SearchView(TestCase):
         with self.assertTemplateUsed('dictionary/search_result.html'):
                 response = search(request) 
         self.assertEqual(response.status_code, 200)
+    
+    
+class TestHelperMethods(TestCase):
+    '''
+    This class tests functions in views.py
+    that are not views.
+    ''' 
+    tures = ["test_data.json"]
+    
+    def test_paginate_page_not_an_integer(self):
+        '''
+        Paginate should return the 1st page of objects
+        if the requested page number is not a valid number.
+        '''
+        # j is not a valid number
+        data = {'page' : 'j'}
+        request = create_request(method='get', data=data)
+        npages = 50
+        # create 100 objects
+        objects = ['a' for i in range(0,100)]
+        (result_page, paginator) = paginate(request, objects ,npages)
+        self.assertEqual(result_page.number,1)
+        
+    def test_painate_page_out_of_range(self):
+        '''
+        Paginate should return the last page of objects
+        if the requested page number is out of range.
+        '''
+        # 3 will be out of range, because there will be only 2 pages
+        data = {'page' : 3}
+        request = create_request(method='get', data=data)
+        # page is not a valid number
+        npages = 50
+        # create 100 objects
+        objects = ['a' for i in range(0,100)]
+        (result_page, paginator) = paginate(request, objects ,npages)
+        self.assertEqual(result_page.number,2)
+        
+    def test_paginate_no_page_number_requested(self):
+        '''
+        Paginate should return the first page if 
+        no page number is requested.
+        '''
+        request = create_request(method='get')
+        # page is not a valid number
+        npages = 50
+        # create 100 objects
+        objects = ['a' for i in range(0,100)]
+        (result_page, paginator) = paginate(request, objects ,npages)
+        self.assertEqual(result_page.number,1)
+        
+        
+    def test_paginate_no_page_number_requested(self):
+        '''
+        Paginate should return the first page if 
+        the list of objects is empty.
+        '''
+        request = create_request(method='get')
+        # page is not a valid number
+        npages = 50
+        # create 0 objects
+        objects = []
+        (result_page, paginator) = paginate(request, objects ,npages)
+        self.assertEqual(result_page.number,1)       
+        
+        
     
     
 

@@ -146,17 +146,19 @@ class SearchView(TestCase):
         with self.assertTemplateUsed('dictionary/search_result.html'):
                 response = search(request) 
         self.assertEqual(response.status_code, 200)
-    """         
+             
     def test_search_view_keyword_as_get_variable_1_exact_match(self):
         '''
         passing a keyeword that exactly matches only 1 keyword should 
         redirect to the keyword's gloss page.
         '''
-        request=create_request(method='get', data={'query':'Aborigine'})
-        with self.assertTemplateUsed('dictionary/search_result.html'):
-                response = search(request) 
+        data={'query':'Aborigine'}
+        request=create_request(method='get', data=data)  
+        response = search(request) 
         self.assertEqual(response.status_code, 302)
-    """
+        redirect_url = '/dictionary/words/%s-1'%data['query']
+        self.assertTrue(response.url, redirect_url)
+    
     def test_search_view_keyword_as_get_variable_inexact_match(self):
         '''
         passing a keyeword that inexactly matches a keyword should 

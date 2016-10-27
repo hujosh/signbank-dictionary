@@ -57,7 +57,7 @@ def search(request):
             
     # display the keyword page if there's only one hit and it is an exact match
     if len(words) == 1 and words[0].text == term:
-        return redirect('/dictionary/words/'+words[0].text+'-1.html' )
+        return redirect('/dictionary/words/'+words[0].text+'-1')
         
     # There might be many hits, so let's paginate them...
     paginator = Paginator(words, 50)

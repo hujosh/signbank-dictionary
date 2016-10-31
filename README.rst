@@ -37,8 +37,9 @@ You must define the following variables in ``settings.py``
 * ``ANON_SAFE_SEARCH`` 
 * ``FORCE_LOWERCASE_TAGS``
 * ``ALLOWED_TAGS``
+* ``DEFINITION_FIELDS``
 
-``AllOWED_TAGS`` is a list of strings. The variable is used by the ``tagging`` app.
+``AllOWED_TAGS`` is a list of strings that is used by the ``tagging`` app.
 You can copy and paste the following list when you come to defining ``ALLOWED_TAGS`` in
 your ``settings.py`` ::
     
@@ -140,6 +141,11 @@ your ``settings.py`` ::
                  'workflow:redo video',
                  'workflow:problematic',
                  ]
+                 
+``DEFINITION_FIELDS`` is a list of strings. You can use this in your ``settings.py`` ::
+
+    DEFINITION_FIELDS = ['general', 'noun', 'verb', 'interact', 'diectic', 'modifier', 'question', 'augment', 'note'],
+                
 
 You must also add ``dictionary``, and ``tagging`` to your ``INSTALLED_APPS`` variable.
 

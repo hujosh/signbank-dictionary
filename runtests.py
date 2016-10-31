@@ -67,6 +67,8 @@ try:
         ALWAYS_REQUIRE_LOGIN = True,
         ANON_SAFE_SEARCH = False,
         
+        # which definition fields do we show and in what order?
+DEFINITION_FIELDS = ['general', 'noun', 'verb', 'interact', 'diectic', 'modifier', 'question', 'augment', 'note'],
         
 # settings for django-tagging
 ANON_TAG_SEARCH = False,

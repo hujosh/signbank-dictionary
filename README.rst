@@ -39,6 +39,7 @@ You must define the following variables in ``settings.py``
 * ``ALLOWED_TAGS``
 * ``DEFINITION_FIELDS``
 * ``SIGN_NAVIGATION``
+* ``DEFINITION_ROLE_CHOICES``
 
 ``AllOWED_TAGS`` is a list of strings that is used by the ``tagging`` app.
 You can copy and paste the following list when you come to defining ``ALLOWED_TAGS`` in
@@ -147,7 +148,22 @@ your ``settings.py`` ::
 
     DEFINITION_FIELDS = ['general', 'noun', 'verb', 'interact', 'diectic', 'modifier', 'question', 'augment', 'note'],
                 
+``DEFINITION_ROLE_CHOICES`` is a list of tuples. You can use this ::
 
+    DEFINITION_ROLE_CHOICES = (('general', 'General Definition'),
+    ('noun', 'As a Noun'),
+    ('verb', 'As a Verb or Adjective'), 
+    ('deictic', 'As a Pointing Sign'),
+    ('interact', 'Interactive'),
+    ('modifier', 'As Modifier'),
+    ('question', 'As Question'),
+    ('popexplain', 'Popular Explanation'),
+    ('augment', 'Augmented Meaning'),
+    ('note', 'Note'),
+    ('privatenote', 'Private Note'),
+    ('B92 sn', 'Sign Number in Brien 92')     
+              
+                
 You must also add ``dictionary``, and ``tagging`` to your ``INSTALLED_APPS`` variable.
 
 

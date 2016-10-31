@@ -67,8 +67,21 @@ try:
         ALWAYS_REQUIRE_LOGIN = True,
         ANON_SAFE_SEARCH = False,
         
-        # which definition fields do we show and in what order?
+# which definition fields do we show and in what order?
 DEFINITION_FIELDS = ['general', 'noun', 'verb', 'interact', 'diectic', 'modifier', 'question', 'augment', 'note'],
+DEFINITION_ROLE_CHOICES = (('general', 'General Definition'),
+    ('noun', 'As a Noun'),
+    ('verb', 'As a Verb or Adjective'), 
+    ('deictic', 'As a Pointing Sign'),
+    ('interact', 'Interactive'),
+    ('modifier', 'As Modifier'),
+    ('question', 'As Question'),
+    ('popexplain', 'Popular Explanation'),
+    ('augment', 'Augmented Meaning'),
+    ('note', 'Note'),
+    ('privatenote', 'Private Note'),
+    ('B92 sn', 'Sign Number in Brien 92'),
+),
  # do we display the previous/next links to signs, requires gloss.sn to be used consistently
 SIGN_NAVIGATION = True,
 # settings for django-tagging

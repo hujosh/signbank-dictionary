@@ -69,7 +69,8 @@ try:
         
         # which definition fields do we show and in what order?
 DEFINITION_FIELDS = ['general', 'noun', 'verb', 'interact', 'diectic', 'modifier', 'question', 'augment', 'note'],
-        
+ # do we display the previous/next links to signs, requires gloss.sn to be used consistently
+SIGN_NAVIGATION = True,
 # settings for django-tagging
 ANON_TAG_SEARCH = False,
 FORCE_LOWERCASE_TAGS = True, 

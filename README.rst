@@ -38,6 +38,7 @@ You must define the following variables in ``settings.py``
 * ``FORCE_LOWERCASE_TAGS``
 * ``ALLOWED_TAGS``
 * ``DEFINITION_FIELDS``
+* ``SIGN_NAVIGATION``
 
 ``AllOWED_TAGS`` is a list of strings that is used by the ``tagging`` app.
 You can copy and paste the following list when you come to defining ``ALLOWED_TAGS`` in

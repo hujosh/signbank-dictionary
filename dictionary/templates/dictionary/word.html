@@ -31,7 +31,7 @@
             {% if SIGN_NAVIGATION %}
         
                 {% if navigation.prev %}
-                <a class='btn navbar-btn btn-default' href="{% url 'root_page' %}dictionary/gloss/{{navigation.prev.idgloss}}.html?lastmatch={{lastmatch}}">&laquo; <span class='hidden-xs'>Previous Sign</span></a>
+                <a class='btn navbar-btn btn-default' href="{% url 'dictionary:gloss' navigation.prev.idgloss %}?lastmatch={{lastmatch}}">&laquo; <span class='hidden-xs'>Previous Sign</span></a>
            
                 {% endif %}
             
@@ -39,7 +39,7 @@
             
                 {% if navigation.next %}
                 <a class="btn navbar-btn btn-default"
-                   href="{% url 'root_page' %}dictionary/gloss/{{navigation.next.idgloss}}.html?lastmatch={{lastmatch}}"><span class='hidden-xs'>Next Sign</span> &raquo;</a>
+                   href="{% url 'dictionary:gloss' navigation.next.idgloss %}?lastmatch={{lastmatch}}"><span class='hidden-xs'>Next Sign</span> &raquo;</a>
                 {% endif %}
              {% else %}
            
@@ -55,13 +55,13 @@
                 {% ifequal i n %}
                 <button type='button' class='btn btn-primary navbar-btn'>{{i}}</button>
                 {% else %}
-                <a type='button' class='btn btn-default navbar-btn' href="{{translation.translation}}-{{i}}.html">{{i}}</a>
+                <a type='button' class='btn btn-default navbar-btn' href="{{translation.translation}}-{{i}}">{{i}}</a>
                 {% endifequal %}
             {% endfor %}
             </div>
             {% else %}
                 {% if lastmatch %}
-                <a class='btn btn-default navbar-btn' href="{% url 'root_page' %}dictionary/words/{{lastmatch}}.html">Return to Matches</a>
+                <a class='btn btn-default navbar-btn' href="{% url 'dictionary:word' lastmatch %}">Return to Matches</a>
                 {% endif %}
             {% endif %}
         </div>

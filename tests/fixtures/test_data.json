@@ -117,7 +117,8 @@
         "fields": {
             "annotation_idgloss": "ABRAHAM", 
             "idgloss": "Abraham",
-            "sn" : 2
+            "sn" : 3,
+            "inWeb": false
         }
     }, 
     
@@ -127,7 +128,7 @@
         "fields": {
             "annotation_idgloss": "ADAM", 
             "idgloss": "Adam",
-            "sn" : 3
+            "sn" : 4
         }
     }, 
     
@@ -137,7 +138,7 @@
         "fields": {
             "annotation_idgloss": "ADELAIDE", 
             "idgloss": "Adelaide",
-            "sn" : 4
+            "sn" : 5
         }
     }, 
     
@@ -147,7 +148,7 @@
         "fields": {
             "annotation_idgloss": "AFRICA", 
             "idgloss": "Africa",
-            "sn" : 5
+            "sn" : 6
         }
     }, 
     
@@ -157,7 +158,7 @@
         "fields": {
             "annotation_idgloss": "AFRICAN", 
             "idgloss": "African",
-            "sn" : 6
+            "sn" : 7
         }
     },   
      {

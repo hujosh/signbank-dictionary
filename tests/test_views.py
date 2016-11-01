@@ -5,10 +5,12 @@ from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.auth.models import AnonymousUser, User, Permission
 from tagging.models import Tag
 from django.http import Http404
+from django.db.models import Max
 
 from dictionary.views import (search, remove_crude_words, 
-    remove_words_not_belonging_to_category, paginate, word)
-from dictionary.models import Keyword
+    remove_words_not_belonging_to_category, paginate, word, 
+    get_gloss_position, gloss)
+from dictionary.models import Keyword, Gloss
 
 
 def create_request(url=None, method='GET', data=None, permission=None, logged_in=True):
@@ -236,11 +238,64 @@ class TestHelperMethods(TestCase):
         (result_page, paginator) = paginate(request, objects ,npages)
         self.assertEqual(result_page.number, 1)  
         
+    def test_get_gloss_position_first_gloss(self):
+        '''
+        get_gloss_position should return the right position of
+        the passed in gloss relative to the other glosses.
+        
+        Also, the gloss being tested has an sn of 1, so this is an edge case...
+        '''
+        # Let's use the first gloss...
+        gloss = Gloss.objects.get(sn=1)
+        # How many glosses are there?
+        nglosses = len(Gloss.objects.all()) 
+        can_view_gloss_not_inWeb = True
+        (glossposn, glosscount) = get_gloss_position(gloss, 
+            can_view_gloss_not_inWeb)  
+        self.assertEqual(glossposn, gloss.sn)
+        self.assertEqual(glosscount, nglosses)
+        
+    def test_get_gloss_position_last_gloss(self):
+        '''
+        get_gloss_position should return the right position of
+        the passed in gloss relative to the other glosses.
+        
+        Also, the gloss being tested has an sn of max(Gloss.sn), 
+        so this is an edge case...
+        '''
+        # Let's get the last gloss...
+        last_sn = Gloss.objects.all().aggregate(Max('sn'))['sn__max']
+        gloss = Gloss.objects.get(sn=last_sn)
+        # How many glosses are there?
+        nglosses = len(Gloss.objects.all())
+        can_view_gloss_not_inWeb = True
+        (glossposn, glosscount) = get_gloss_position(gloss, 
+                can_view_gloss_not_inWeb)
+        # Its position is nglosses, not neccessarily its sn. 
+        self.assertEqual(glossposn, nglosses)
+        self.assertEqual(glosscount, nglosses)
+        
+    def test_get_gloss_position_gap(self):
+        '''
+        gloss a has sn of 1, and gloss b has sn of 3. Then 
+        gloss b has a position of 2, not 3...
+        '''
+        # Let's use the first gloss...
+        gloss = Gloss.objects.get(sn=3)
+        # How many glosses are there?
+        nglosses = len(Gloss.objects.all()) 
+        can_view_gloss_not_inWeb = True
+        (glossposn, glosscount) = get_gloss_position(gloss, 
+                can_view_gloss_not_inWeb) 
+        # It should have a position of 2... 
+        self.assertEqual(glossposn, 2)
+        self.assertEqual(glosscount, nglosses)
         
 class WordView(TestCase):
     fixtures = ["test_data.json"]
     
     def setUp(self):
+        # A keyword that exists in the fixture
         self.keyword = 'Aborigine'
         self.n = 1
     
@@ -261,12 +316,87 @@ class WordView(TestCase):
         doesn't exist.
         '''
         request=create_request(method='get')
-        non_existent_keyword = 'zzzaera'
+        non_existent_keyword = 'zzzzazer'
         self.assertRaises(Http404, word, request, non_existent_keyword, self.n)
 
+    def test_word_view_returns_404_if_gloss_not_inWeb_and_not_admin(self):
+        '''
+        If you're not an admin and you try to view a keyword for which
+        no gloss is inWeb, then you should get 404.
+        '''
+        keyword_whose_gloss_not_inWeb = 'Abraham'
+        request=create_request(method='get')
+        self.assertRaises(Http404, word, request, keyword_whose_gloss_not_inWeb, 
+            self.n)
     
+    def test_inWeb_irrelevant_when_admin(self):
+        '''
+        If you're  an admin and you try to view a keyword for which
+        no gloss is inWeb, then you should get 200 response code
+        and right template.
+        '''
+        keyword_whose_gloss_not_inWeb = 'Abraham'
+        permission = 'Can Search/View Full Gloss Details'
+        request=create_request(method='get', permission=permission)
+        with self.assertTemplateUsed('dictionary/word.html'):
+                response = word(request, keyword_whose_gloss_not_inWeb, self.n) 
+        self.assertEqual(response.status_code, 200)
+        
     
+class Glossview(TestCase):
+    fixtures = ["test_data.json"]
     
+    def setUp(self):
+        # An idgloss that exists in the fixture...
+        self.idgloss = 'Aborigine1'
+        self.login_url = '/accounts/login/?next=/None'
     
+    @override_settings(ALWAYS_REQUIRE_LOGIN=True)
+    def test_not_logged_in_and_login_required(self):
+        '''
+        A user who is not logged in should
+        be sent to the login page
+        if he requests the gloss view.
+        '''
+        request = create_request(logged_in = False)
+        response = gloss(request, self.idgloss)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.login_url)                        
     
+    @override_settings(ALWAYS_REQUIRE_LOGIN=False)
+    def test_not_logged_in_and_login_not_required(self):
+        '''
+        A user who is not logged in should
+        not be sent to the login page
+        if he requests the gloss view.
+        '''
+        request = create_request(logged_in = False)
+        with self.assertTemplateUsed('dictionary/word.html'):
+                response = gloss(request, self.idgloss) 
+        self.assertEqual(response.status_code, 200)
+    
+    def test_gloss_not_inWeb_and_user_not_admin(self):
+        '''
+        A user who is not an admin, but who
+        tries to view a gloss that is not InWeb,
+        should be denied; 404 should be returned.
+        '''
+        # Let's get a gloss that isn't inWeb
+        gloss_not_inWeb = Gloss.objects.filter(inWeb=False)[0]
+        print (gloss_not_inWeb)
+        request = create_request(method='get')
+        self.assertRaises(Http404, gloss, request, gloss_not_inWeb.idgloss)
+        
+    def test_gloss_not_inWeb_irreleant_when_user_is_admin(self):
+        '''
+        A gloss not being inWeb shouldn't matter if the 
+        user is an admin; subsequently, the user should
+        get a 200 response code and the right template...
+        '''
+        gloss_not_inWeb = Gloss.objects.filter(inWeb=False)[0]
+        permission = 'Can Search/View Full Gloss Details'
+        request=create_request(method='get', permission=permission)
+        with self.assertTemplateUsed('dictionary/word.html'):
+                response = gloss(request, gloss_not_inWeb.idgloss)
+        self.assertEqual(response.status_code, 200)
 

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import resolve
 
-from dictionary.views import search, word
+from dictionary.views import search, word, gloss
 
 
 class DictionaryURLs(TestCase):
@@ -28,3 +28,12 @@ class DictionaryURLs(TestCase):
         '''
         found = resolve('/words/jet-1/')
         self.assertEqual(found.func, word)
+        
+    def test_gloss_url_resolves_to_gloss_view(self):
+        '''
+        '/gloss/1/', for example, should be routed 
+        to the gloss view.
+        '''
+        found = resolve('/gloss/1/')
+        self.assertEqual(found.func, gloss)
+           

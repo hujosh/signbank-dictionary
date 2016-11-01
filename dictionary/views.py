@@ -3,7 +3,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from tagging.models import Tag, TaggedItem
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 from dictionary.forms import UserSignSearchForm, TagUpdateForm
 from dictionary.models import Gloss, Keyword
@@ -137,9 +137,9 @@ def word(request, keyword, n):
     '''
     trans.homophones = trans.gloss.relation_sources.filter(role='homophone')
 
-    gloss_must_be_in_web = request.user.has_perm('dictionary.search_gloss')
+    can_view_not_inWeb = request.user.has_perm('dictionary.search_gloss')
     gloss = trans.gloss
-    (glossposn, glosscount) = get_gloss_position(gloss, gloss_must_be_in_web)
+    (glossposn, glosscount) = get_gloss_position(gloss, can_view_not_inWeb)
     
     # navigation gives us the next and previous signs
     nav = gloss.navigation(request.user.has_perm('dictionary.search_gloss'))
@@ -194,20 +194,114 @@ def word(request, keyword, n):
                    'SIGN_NAVIGATION' : settings.SIGN_NAVIGATION,
                    'DEFINITION_FIELDS' : settings.DEFINITION_FIELDS,
                    })
+
+@login_required_config
+def gloss(request, idgloss):
+    '''
+    View of a gloss - mimics the word view, really for admin use
+    when we want to preview a particular gloss
+    '''
+    '''
+    if request.GET.has_key('feedbackmessage'):
+        feedbackmessage = request.GET['feedbackmessage']
+    else:
+        feedbackmessage = False
+    '''
+    # we should only be able to get a single gloss, but since the URL
+    # pattern could be spoofed, we might get zero or many
+    # so we filter first and raise a 404 if we don't get one
+    can_view_not_inWeb = request.user.has_perm('dictionary.search_gloss')
+    if can_view_not_inWeb:
+        glosses = Gloss.objects.filter(idgloss=idgloss)
+    else:
+        glosses = Gloss.objects.filter(inWeb__exact=True, idgloss=idgloss)
+
+    if len(glosses) != 1:
+        raise Http404
+
+    gloss = glosses[0]
+
+    # and all the keywords associated with this sign
+    allkwds = gloss.translation_set.all()
+    if len(allkwds) == 0:
+        trans = Translation()
+    else:
+        trans = allkwds[0]
+    '''
+    videourl = gloss.get_video_url()
+    if not os.path.exists(os.path.join(settings.MEDIA_ROOT, videourl)):
+        videourl = None
+    '''
+    (glossposn, glosscount) = get_gloss_position(gloss, can_view_not_inWeb)
     
-                    
-def get_gloss_position(gloss, gloss_must_be_in_web):
+    # navigation gives us the next and previous signs
+    nav = gloss.navigation(can_view_not_inWeb)
+
+    # the gloss update form for staff
+    update_form = None
+    '''
+    if request.user.has_perm('dictionary.search_gloss'):
+        update_form = GlossModelForm(instance=gloss)
+        video_form = VideoUploadForGlossForm(initial={'gloss_id': gloss.pk,
+                                                      'redirect': request.get_full_path()})
+    else:
+        update_form = None
+        video_form = None
+        
+    '''
+    # get the last match keyword if there is one passed along as a form variable
+    if 'lastmatch' in request.GET:
+        lastmatch = request.GET['lastmatch']
+        if lastmatch == "None":
+            lastmatch = False
+    else:
+        lastmatch = False
+    '''
+    # Regional list (sorted by dialect name) and regional template contents if this gloss has one
+    regions = sorted(gloss.region_set.all(), key=lambda n: n.dialect.name)
+    try:
+        page = Page.objects.get(url__exact=gloss.regional_template)
+        regional_template_content = mark_safe(page.content)
+    except:
+        regional_template_content = None
+    '''
+
+    return render(request, "dictionary/word.html",
+                              {'translation': trans,
+                               'definitions': gloss.definitions(),
+                               'allkwds': allkwds,
+                               #'dialect_image': map_image_for_regions(gloss.region_set),
+                               #'regions': regions,
+                               #'regional_template_content': regional_template_content,
+                               'lastmatch': lastmatch,
+                               #'videofile': videourl,
+                               'viewname': word,
+                               #'feedback': None,
+                               'gloss': gloss,
+                               'glosscount': glosscount,
+                               'glossposn': glossposn,
+                               'navigation': nav,
+                               #'update_form': update_form,
+                               #'videoform': video_form,
+                               'tagform': TagUpdateForm(),
+                               #'feedbackmessage': feedbackmessage,
+                               'SIGN_NAVIGATION' : settings.SIGN_NAVIGATION,
+                               'DEFINITION_FIELDS' : settings.DEFINITION_FIELDS,
+                               })
+
+
+def get_gloss_position(gloss, can_view_not_inWeb):
     '''
     This functions returns a tuple; the first value
     of the tuple is the gloss's position relative
-    to all of the other glosses, and the second argument
+    to all of the other glosses, and the second value
     is the total number of glosses.
     
     If gloss_must_be_in_web is true, then only glosses
     that are in the web will be considered.
     '''
     if gloss.sn != None:
-        if not gloss_must_be_in_web:
+        if  can_view_not_inWeb:
             glosscount = Gloss.objects.count()
             glossposn = Gloss.objects.filter(sn__lt=gloss.sn).count()+1
         else:
@@ -219,7 +313,7 @@ def get_gloss_position(gloss, gloss_must_be_in_web):
         glossposn = 0
     return (glossposn, glosscount)
     
-    
+
     
     
     

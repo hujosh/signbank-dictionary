@@ -1,11 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from tagging.models import Tag, TaggedItem
 from django.http import HttpResponse
 
-from dictionary.forms import UserSignSearchForm
+from dictionary.forms import UserSignSearchForm, TagUpdateForm
 from dictionary.models import Gloss, Keyword
 
 
@@ -42,12 +42,13 @@ def search(request):
         # safe search for non-authenticated users if the setting says so
         if request.user.has_perm('dictionary.search_gloss'):
             # staff get to see all the words that have at least one translation
-            words = Keyword.objects.filter(text__istartswith=term, translation__isnull=False).distinct()
+            words = Keyword.objects.filter(text__istartswith=term, 
+                translation__isnull=False).distinct()
         else:
             # regular users see either everything that's published
             # not sure what is going on here...
             words = Keyword.objects.filter(text__istartswith=term,
-                                            translation__gloss__inWeb__exact=True).distinct()        
+                translation__gloss__inWeb__exact=True).distinct()        
         safe = (not request.user.is_authenticated()) and settings.ANON_SAFE_SEARCH
         if safe:
             words = remove_crude_words(words)    
@@ -104,7 +105,7 @@ def remove_words_not_belonging_to_category(words, category):
     
     
 def paginate(request, objects, npages):
-    # There might be many hits, so let's paginate them...
+    # There might be many matches, so let's paginate them...
     paginator = Paginator(objects, npages)
     if 'page' in request.GET:    
         page = request.GET['page']
@@ -123,5 +124,104 @@ def word(request, keyword, n):
     '''
     View of a single keyword that may have more than one sign.
     '''
-    # temporary...
-    return HttpResponse("TEST")
+    n = int(n)
+    word = get_object_or_404(Keyword, text=keyword)
+    # returns (matching translation, number of matches)
+    (trans, total) =  word.match_request(request, n)
+    # and all the keywords associated with this sign
+    allkwds = trans.gloss.translation_set.all()
+    '''
+    videourl = trans.gloss.get_video_url()
+    if not os.path.exists(os.path.join(settings.MEDIA_ROOT, videourl)):
+        videourl = None
+    '''
+    trans.homophones = trans.gloss.relation_sources.filter(role='homophone')
+
+    gloss_must_be_in_web = request.user.has_perm('dictionary.search_gloss')
+    gloss = trans.gloss
+    (glossposn, glosscount) = get_gloss_position(gloss, gloss_must_be_in_web)
+    
+    # navigation gives us the next and previous signs
+    nav = gloss.navigation(request.user.has_perm('dictionary.search_gloss'))
+    
+    '''
+    if request.user.has_perm('dictionary.search_gloss'):
+        update_form = GlossModelForm(instance=trans.gloss)
+        video_form = VideoUploadForGlossForm(initial={'gloss_id': trans.gloss.pk,
+                                                      'redirect': request.path})
+    else:
+        update_form = None
+        video_form = None
+    '''
+    '''
+    # Regional list (sorted by dialect name) and regional template contents if this gloss has one
+    regions = sorted(gloss.region_set.all(), key=lambda n: n.dialect.name)
+    try:
+        page = Page.objects.get(url__exact=gloss.regional_template)
+        regional_template_content = mark_safe(page.content)
+    except:
+        regional_template_content = None
+    
+    '''
+    
+    
+    return render(request, 'dictionary/word.html',
+                    {'translation': trans,
+                   'viewname': 'words',
+                   'definitions': trans.gloss.definitions(),
+                   'gloss': trans.gloss,
+                   'allkwds': allkwds,
+                   'n': n,
+                   'total': total,
+                   'matches': range(1, total+1),
+                   'navigation': nav,
+                   #'dialect_image': map_image_for_regions(gloss.region_set),
+                   #'regions': regions,
+                   #'regional_template_content': regional_template_content,
+                   # lastmatch is a construction of the url for this word
+                   # view that we use to pass to gloss pages
+                   # could do with being a fn call to generate this name here and elsewhere
+                   'lastmatch': str(trans.translation)+"-"+str(n),
+                   #'videofile': videourl,
+                   #'update_form': update_form,
+                   #'videoform': video_form,
+                   'gloss': gloss,
+                   'glosscount': glosscount,
+                   'glossposn': glossposn,
+                   #'feedback' : True,
+                   #'feedbackmessage': feedbackmessage,
+                   'tagform': TagUpdateForm(),
+                   'SIGN_NAVIGATION' : settings.SIGN_NAVIGATION,
+                   'DEFINITION_FIELDS' : settings.DEFINITION_FIELDS,
+                   })
+    
+                    
+def get_gloss_position(gloss, gloss_must_be_in_web):
+    '''
+    This functions returns a tuple; the first value
+    of the tuple is the gloss's position relative
+    to all of the other glosses, and the second argument
+    is the total number of glosses.
+    
+    If gloss_must_be_in_web is true, then only glosses
+    that are in the web will be considered.
+    '''
+    if gloss.sn != None:
+        if not gloss_must_be_in_web:
+            glosscount = Gloss.objects.count()
+            glossposn = Gloss.objects.filter(sn__lt=gloss.sn).count()+1
+        else:
+            glosscount = Gloss.objects.filter(inWeb__exact=True).count()
+            glossposn = Gloss.objects.filter(inWeb__exact=True, 
+                sn__lt=gloss.sn).count()+1
+    else:
+        glosscount = 0
+        glossposn = 0
+    return (glossposn, glosscount)
+    
+    
+    
+    
+    
+    
+    

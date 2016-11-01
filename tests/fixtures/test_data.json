@@ -159,5 +159,110 @@
             "idgloss": "African",
             "sn" : 6
         }
-    }        
+    },   
+     {
+        "pk": 2, 
+        "model": "dictionary.language", 
+        "fields": {
+            "name": "ASL", 
+            "description": "American Sign Language"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "dictionary.language", 
+        "fields": {
+            "name": "Auslan", 
+            "description": "Auslan is the sign language of Australia"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "dictionary.language", 
+        "fields": {
+            "name": "BSL", 
+            "description": "British Sign Language"
+        }
+    },
+     {
+        "pk": 9, 
+        "model": "dictionary.dialect", 
+        "fields": {
+            "name": "Australia Wide", 
+            "language": 1, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "dictionary.dialect", 
+        "fields": {
+            "name": "New South Wales", 
+            "language": 1, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "dictionary.dialect", 
+        "fields": {
+            "name": "Northern Dialect", 
+            "language": 1, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "dictionary.dialect", 
+        "fields": {
+            "name": "Queensland", 
+            "language": 1, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "dictionary.dialect", 
+        "fields": {
+            "name": "South Australia", 
+            "language": 1, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "dictionary.dialect", 
+        "fields": {
+            "name": "Southern Dialect", 
+            "language": 1, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "dictionary.dialect", 
+        "fields": {
+            "name": "Tasmania", 
+            "language": 1, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "dictionary.dialect", 
+        "fields": {
+            "name": "Victoria", 
+            "language": 1, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "dictionary.dialect", 
+        "fields": {
+            "name": "Western Australia", 
+            "language": 1, 
+            "description": ""
+        }
+    }         
  ]

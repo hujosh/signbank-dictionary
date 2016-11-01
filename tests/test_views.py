@@ -4,9 +4,10 @@ from django.conf import settings
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.auth.models import AnonymousUser, User, Permission
 from tagging.models import Tag
+from django.http import Http404
 
 from dictionary.views import (search, remove_crude_words, 
-    remove_words_not_belonging_to_category, paginate)
+    remove_words_not_belonging_to_category, paginate, word)
 from dictionary.models import Keyword
 
 
@@ -56,6 +57,9 @@ def create_user(permission=None):
    
 
 class SearchView(TestCase):
+    # Django will populate the database with the data
+    # in the file 'test_data.json'.
+    # You should read the django docs to understand how this works.
     fixtures = ["test_data.json"]
     
     def setUp(self):
@@ -175,7 +179,7 @@ class TestHelperMethods(TestCase):
     This class tests functions in views.py
     that are not views.
     ''' 
-    tures = ["test_data.json"]
+    fixtures = ["test_data.json"]
     
     def test_paginate_page_not_an_integer(self):
         '''
@@ -204,7 +208,7 @@ class TestHelperMethods(TestCase):
         # create 100 objects
         objects = ['a' for i in range(0,100)]
         (result_page, paginator) = paginate(request, objects ,npages)
-        self.assertEqual(result_page.number,2)
+        self.assertEqual(result_page.number, 2)
         
     def test_paginate_no_page_number_requested(self):
         '''
@@ -217,8 +221,7 @@ class TestHelperMethods(TestCase):
         # create 100 objects
         objects = ['a' for i in range(0,100)]
         (result_page, paginator) = paginate(request, objects ,npages)
-        self.assertEqual(result_page.number,1)
-        
+        self.assertEqual(result_page.number, 1)
         
     def test_paginate_no_page_number_requested(self):
         '''
@@ -231,9 +234,39 @@ class TestHelperMethods(TestCase):
         # create 0 objects
         objects = []
         (result_page, paginator) = paginate(request, objects ,npages)
-        self.assertEqual(result_page.number,1)       
+        self.assertEqual(result_page.number, 1)  
         
         
+class WordView(TestCase):
+    fixtures = ["test_data.json"]
+    
+    def setUp(self):
+        self.keyword = 'Aborigine'
+        self.n = 1
+    
+    def test_word_view_return_200_response_code_and_right_template(self):
+        '''
+        The 'word' view should render 
+        'word.html' and
+        it should return a response code of 200.
+        '''
+        request=create_request(method='get')
+        with self.assertTemplateUsed('dictionary/word.html'):
+                response = word(request, self.keyword, self.n) 
+        self.assertEqual(response.status_code, 200)
+
+    def test_word_view_returns_404_for_non_existent_keyword(self):
+        '''
+        'word' should return a 404 if the keyword passed to it
+        doesn't exist.
+        '''
+        request=create_request(method='get')
+        non_existent_keyword = 'zzzaera'
+        self.assertRaises(Http404, word, request, non_existent_keyword, self.n)
+
+    
+    
+    
     
     
 

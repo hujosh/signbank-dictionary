@@ -383,7 +383,6 @@ class Glossview(TestCase):
         '''
         # Let's get a gloss that isn't inWeb
         gloss_not_inWeb = Gloss.objects.filter(inWeb=False)[0]
-        print (gloss_not_inWeb)
         request = create_request(method='get')
         self.assertRaises(Http404, gloss, request, gloss_not_inWeb.idgloss)
         
@@ -399,4 +398,14 @@ class Glossview(TestCase):
         with self.assertTemplateUsed('dictionary/word.html'):
                 response = gloss(request, gloss_not_inWeb.idgloss)
         self.assertEqual(response.status_code, 200)
+        
+    def test_gloss_does_not_exist(self):
+        '''
+        If a gloss that doesn't exist is passed to the 
+        gloss view, then 404 should be returned.
+        '''
+        non_existent_idgloss = 'ZZZ890'
+        request = create_request()
+        self.assertRaises(Http404, gloss, request, non_existent_idgloss)
+        
 

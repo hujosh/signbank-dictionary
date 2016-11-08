@@ -32,7 +32,8 @@ Then use it in a project::
 You must define the following variables in ``settings.py``
 
 * ``DEFINITION_FIELDS = ['general', 'noun', 'verb', 'interact', 'diectic', 'modifier', 'question', 'augment', 'note']``
-* ``DEFINITION_ROLE_CHOICES = (('general', 'General Definition'),
+* ::
+    DEFINITION_ROLE_CHOICES = (('general', 'General Definition'),
     ('noun', 'As a Noun'),
     ('verb', 'As a Verb or Adjective'), 
     ('deictic', 'As a Pointing Sign'),
@@ -44,10 +45,10 @@ You must define the following variables in ``settings.py``
     ('note', 'Note'),
     ('privatenote', 'Private Note'),
     ('B92 sn', 'Sign Number in Brien 92'),
-    )``
+    )
 
 Those two variables configure how definitions of signs are displayed in
-the dictionary.
+the dictionary. 
 
 * ``ALWAYS_TAG_SEARCH = True``
 * ``ANON_SAFE_SEARCH = False``

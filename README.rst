@@ -31,6 +31,33 @@ Then use it in a project::
     
 You must define the following variables in ``settings.py``
 
+* ``DEFINITION_FIELDS = ['general', 'noun', 'verb', 'interact', 'diectic', 'modifier', 'question', 'augment', 'note']``
+* ``DEFINITION_ROLE_CHOICES = (('general', 'General Definition'),
+    ('noun', 'As a Noun'),
+    ('verb', 'As a Verb or Adjective'), 
+    ('deictic', 'As a Pointing Sign'),
+    ('interact', 'Interactive'),
+    ('modifier', 'As Modifier'),
+    ('question', 'As Question'),
+    ('popexplain', 'Popular Explanation'),
+    ('augment', 'Augmented Meaning'),
+    ('note', 'Note'),
+    ('privatenote', 'Private Note'),
+    ('B92 sn', 'Sign Number in Brien 92'),
+    )``
+
+Those two variables configure how definitions of signs are displayed in
+the dictionary.
+
+* ``ALWAYS_TAG_SEARCH = True``
+* ``ANON_SAFE_SEARCH = False``
+
+These two variables specify whether an anonymous user (a user who is not
+logged in) may search for a sign by tag, and whether signs categorised
+as crude (offensive) will be filtered out of the search results for an
+anonymous user.
+
+-----------------------------
 * ``ALWAYS_REQUIRE_LOGIN`` 
 * ``LANGUAGE_NAME``
 * ``ANON_TAG_SEARCH``

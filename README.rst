@@ -29,7 +29,7 @@ Then use it in a project::
 
     import dictionary
     
-You must define the following variables in ``settings.py``::
+You must define the following variables in ``settings.py``:
 
 * ::
 
@@ -62,7 +62,7 @@ as crude (offensive) will be filtered out of the search results for an
 anonymous user, respectively.
 
 
-* ``ALWAYS_REQUIRE_LOGIN = False''
+* ``ALWAYS_REQUIRE_LOGIN = False``
 
 This variable controls whether a user must be logged in
 to search for signs.

@@ -341,7 +341,7 @@ minor or insignificant ways that can be ignored.""")
     initial_relative_orientation = models.CharField("Initial Interacting Dominant Hand Part", null=True, max_length=20, blank=True, choices=relOrientationChoices) 
     final_relative_orientation = models.CharField("Final Interacting Dominant Hand Part", null=True, max_length=20, blank=True, choices=relOrientationChoices)
     isNew = models.NullBooleanField("Is this a proposed new sign?", null=True, default=False)
-    inittext = models.CharField(max_length="50", blank=True) 
+    inittext = models.CharField(max_length=50, blank=True) 
     morph = models.CharField("Morphemic Analysis", max_length=50, blank=True)  
     sedefinetf = models.TextField("Signed English definition available", null=True, blank=True)  # TODO: should be boolean
     segloss = models.CharField("Signed English gloss", max_length=50, blank=True,  null=True) 

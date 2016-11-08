@@ -33,6 +33,7 @@ You must define the following variables in ``settings.py``
 
 * ``DEFINITION_FIELDS = ['general', 'noun', 'verb', 'interact', 'diectic', 'modifier', 'question', 'augment', 'note']``
 * ::
+
     DEFINITION_ROLE_CHOICES = (('general', 'General Definition'),
     ('noun', 'As a Noun'),
     ('verb', 'As a Verb or Adjective'), 

@@ -29,9 +29,11 @@ Then use it in a project::
 
     import dictionary
     
-You must define the following variables in ``settings.py``
+You must define the following variables in ``settings.py``::
 
-* ``DEFINITION_FIELDS = ['general', 'noun', 'verb', 'interact', 'diectic', 'modifier', 'question', 'augment', 'note']``
+* ::
+
+    DEFINITION_FIELDS = ['general', 'noun', 'verb', 'interact', 'diectic', 'modifier', 'question', 'augment', 'note']
 * ::
 
     DEFINITION_ROLE_CHOICES = (('general', 'General Definition'),
@@ -48,32 +50,38 @@ You must define the following variables in ``settings.py``
     ('B92 sn', 'Sign Number in Brien 92'),
     )
 
-Those two variables configure how definitions of signs are displayed in
+Those two variables configure how the definitions of signs are displayed in
 the dictionary. 
 
-* ``ALWAYS_TAG_SEARCH = True``
+* ``ANON_TAG_SEARCH = True``
 * ``ANON_SAFE_SEARCH = False``
 
 These two variables specify whether an anonymous user (a user who is not
 logged in) may search for a sign by tag, and whether signs categorised
 as crude (offensive) will be filtered out of the search results for an
-anonymous user.
+anonymous user, respectively.
 
 
-* ``ALWAYS_REQUIRE_LOGIN`` 
-* ``LANGUAGE_NAME``
-* ``ANON_TAG_SEARCH``
-* ``ANON_SAFE_SEARCH`` 
-* ``FORCE_LOWERCASE_TAGS``
-* ``ALLOWED_TAGS``
-* ``DEFINITION_FIELDS``
-* ``SIGN_NAVIGATION``
-* ``DEFINITION_ROLE_CHOICES``
+* ``ALWAYS_REQUIRE_LOGIN = False''
 
-``AllOWED_TAGS`` is a list of strings that is used by the ``tagging`` app.
-You can copy and paste the following list when you come to defining ``ALLOWED_TAGS`` in
-your ``settings.py`` ::
-    
+This variable controls whether a user must be logged in
+to search for signs.
+
+
+* ``LANGUAGE_NAME  = 'Auslan'``
+
+This variable specifies the sign language of the site.
+
+* ``SIGN_NAVIGATION = True``
+This variable specifies whether a navigation bar
+in the dictionary is displayed. The navigation bar
+allows a user to go from the sign whose entry he is currently 
+looking at to the next, or previous, sign in the sequence of signs.
+
+
+* ``FORCE_LOWERCASE_TAGS = True``
+* ::
+
     ALLOWED_TAGS = [ '', 
                  'b92:directional',
                  'b92:regional',
@@ -172,26 +180,10 @@ your ``settings.py`` ::
                  'workflow:redo video',
                  'workflow:problematic',
                  ]
+These two variables are used by the ``tagging`` app.
+The ``tagging`` app is just a way of assigning categories to
+signs.
                  
-``DEFINITION_FIELDS`` is a list of strings. You can use this in your ``settings.py`` ::
-
-    DEFINITION_FIELDS = ['general', 'noun', 'verb', 'interact', 'diectic', 'modifier', 'question', 'augment', 'note'],
-                
-``DEFINITION_ROLE_CHOICES`` is a list of tuples. You can use this ::
-
-    DEFINITION_ROLE_CHOICES = (('general', 'General Definition'),
-    ('noun', 'As a Noun'),
-    ('verb', 'As a Verb or Adjective'), 
-    ('deictic', 'As a Pointing Sign'),
-    ('interact', 'Interactive'),
-    ('modifier', 'As Modifier'),
-    ('question', 'As Question'),
-    ('popexplain', 'Popular Explanation'),
-    ('augment', 'Augmented Meaning'),
-    ('note', 'Note'),
-    ('privatenote', 'Private Note'),
-    ('B92 sn', 'Sign Number in Brien 92')     
-              
                 
 You must also add ``dictionary``, and ``tagging`` to your ``INSTALLED_APPS`` variable.
 

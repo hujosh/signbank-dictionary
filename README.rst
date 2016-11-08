@@ -57,7 +57,7 @@ logged in) may search for a sign by tag, and whether signs categorised
 as crude (offensive) will be filtered out of the search results for an
 anonymous user.
 
------------------------------
+
 * ``ALWAYS_REQUIRE_LOGIN`` 
 * ``LANGUAGE_NAME``
 * ``ANON_TAG_SEARCH``
